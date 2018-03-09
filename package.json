@@ -1,0 +1,29 @@
+{
+  "name": "pipeline",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/Px.js",
+  "scripts": {
+    "check": "eslint \"./lib/**\" --fix",
+    "test": "mocha --recursive --exit ./test/",
+    "test:one": "mocha --recursive --exit ./test/  -g ",
+    "cover": "nyc npm test",
+    "report": "nyc --reporter=lcov --reporter=text-lcov npm test "
+  },
+  "author": "vrubinat@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "clone": "^2.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.17.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.0.1",
+    "nyc": "^11.4.1",
+    "sinon": "^4.3.0",
+    "rxjs": "^5.5.6"
+  }
+}

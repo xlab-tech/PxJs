@@ -5,7 +5,6 @@ const Px = require('./../lib/Px');
 const SequenceExecutor = require('./../lib/SequenceExecutor');
 
 describe('Px', () => {
-
   describe('base function', () => {
     it('_clone', () => {
       const px = new Px();
@@ -73,6 +72,12 @@ describe('Px', () => {
       const clone = Px.concat(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'concat');
+    });
+
+    it('static concatIf', () => {
+      const clone = Px.concatIf(true);
+      expect(clone.sequencesDescription.length).to.equal(1);
+      expect(clone.sequencesDescription[0]).to.have.property('type', 'concatIf');
     });
 
     it('static replaceIf', () => {
@@ -161,16 +166,42 @@ describe('Px', () => {
       Px.create().fromObserver(observer);
       expect(requests).to.eq(1);
     });
-    it('From Dom event', () => {
-      const event = {
-        addEventListener: (type, func) => {
-          func();
-        },
-      };
-      global.document.getElementById = () => event;
-
-      Px.create().fromDomEvent('#test', 'click');
+    it('bind', () => {
+      const bind = Px.create().bindCallback();
+      bind('test');
       expect(requests).to.eq(1);
+    });
+    it('bind node', () => {
+      const bind = Px.create().bindNodeCallback();
+      bind(null, 'test');
+      expect(requests).to.eq(1);
+    });
+    it('bind node fail', () => {
+      const bind = Px.create().bindNodeCallback();
+      bind('err');
+      expect(requestsFail).to.eq(1);
+    });
+    /*
+    it('From Dom event', () => {
+     const event = {
+       addEventListener: (type, func) => {
+         func();
+       },
+     };
+     global.document.getElementById = () => event;
+
+     Px.create().fromDomEvent('#test', 'click');
+     expect(requests).to.eq(1);
+   }); */
+  });
+  describe('Others', () => {
+    it('subscribe', () => {
+      const pipe = Px.create().subscribe(() => { });
+      expect(pipe.observers).to.have.lengthOf(1);
+    });
+    it('subscribe Object', () => {
+      const pipe = Px.create().subscribe({ complete: () => { } });
+      expect(pipe.observers).to.have.lengthOf(1);
     });
   });
 });

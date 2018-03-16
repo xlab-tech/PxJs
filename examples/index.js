@@ -1,5 +1,5 @@
 /* eslint-disable */
-const Px = require('./../lib/Px');
+const PxFactory = require('./../lib/PxFactory');
 const functions = require('./functions');
 
 const event = {};
@@ -15,7 +15,7 @@ const callback = (err, result) => {
 
 
 const exec = (evt, ctx, call) => {
-  const pipe2 = Px
+  const pipe2 = PxFactory
     .chainConcat(functions.func1, functions.func2)
     .chain(function tt(input) {
       return input[0] + ' test';
@@ -25,7 +25,7 @@ const exec = (evt, ctx, call) => {
     });
 
 
-  const pipe = Px
+  const pipe = PxFactory
     .chain(functions.func1)
     .chain(functions.func1, functions.func2)
     .chain(functions.func3)
@@ -37,7 +37,7 @@ const exec = (evt, ctx, call) => {
       return input.direct + ' adios';
     });
 
-  const p1 = Px
+  const p1 = PxFactory
     .chain(input => `${input} branch1`)
     .chain(input => `${input} branch1`)
     .chain(input => `${input} branch1`)
@@ -50,12 +50,12 @@ const exec = (evt, ctx, call) => {
     .chain(input => `${input} branch1`)
     .chain(input => `${input} branch1`);
 
-  const p2 = Px
+  const p2 = PxFactory
     .chain(input => `${input} branch2`)
     .chain(input => `${input} branch2`)
     .chain(input => `${input} branch2`);
 
-  const pError = Px
+  const pError = PxFactory
     .chain(input => input + 'error');
 
   function* test() {
@@ -83,7 +83,7 @@ const exec = (evt, ctx, call) => {
     .of('rrr');
 
   /*
-Px.chain(input => input + 'ttt')
+PxFactory.chain(input => input + 'ttt')
     .setDebug(true)
     .chain(t)
     .subscribe(res => call(null, res), err => call(err))
@@ -102,7 +102,7 @@ Px.chain(input => input + 'ttt')
     .subscribe(res => call(null, res), err => call(err))
     .of('test')
 
-  Px.branch(p1, p2)
+  PxFactory.branch(p1, p2)
     .chain(input => 'postBracnh ' + input[0] + ' branch2 ' + input[1])
     .subscribe(res => call(null, res), err => call(err))
     .of('aaa');
@@ -138,11 +138,9 @@ Px.chain(input => input + 'ttt')
      */
 };
 
-const c = Px.chain(console.log)
+const c = PxFactory.chain(console.log)
   .catch(err => console.log('error', err))
   .bindNodeCallback();
-
-Px.setDebug(false);
 
 exec(event, context, c);
 

@@ -2,6 +2,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const Px = require('./../lib/Px');
+const PxFactory = require('./../lib/PxFactory');
 const SequenceExecutor = require('./../lib/SequenceExecutor');
 
 describe('Px', () => {
@@ -22,41 +23,32 @@ describe('Px', () => {
       expect(clone.sequencesDescription[0]).to.have.property('params', 'params');
     });
     it('create', () => {
-      const px = Px.create();
+      const px = PxFactory.create();
       expect(px).to.be.an.instanceof(Px);
-    });
-
-    it('static debug', () => {
-      Px.setDebug(true);
-      expect(Px.getDebug()).to.eq(true);
-    });
-    it('debug', () => {
-      const clone = Px.create().setDebug(true);
-      expect(clone.debug).to.eq(true);
     });
   });
 
   describe('Operative Function', () => {
     it('static chain', () => {
-      const clone = Px.chain(true);
+      const clone = PxFactory.chain(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'chain');
     });
 
     it('static chainConcat', () => {
-      const clone = Px.chainConcat(true);
+      const clone = PxFactory.chainConcat(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'chainConcat');
     });
 
     it('static chainIf', () => {
-      const clone = Px.chainIf(true);
+      const clone = PxFactory.chainIf(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'chainIf');
     });
 
     it('static wait', () => {
-      const clone = Px.wait(100);
+      const clone = PxFactory.wait(100);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'wait');
     });
@@ -64,19 +56,19 @@ describe('Px', () => {
 
   describe('Work with Pipes', () => {
     it('static branch', () => {
-      const clone = Px.branch(true);
+      const clone = PxFactory.branch(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'branch');
     });
 
     it('static concat', () => {
-      const clone = Px.concat(true);
+      const clone = PxFactory.concat(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'concat');
     });
 
     it('static replaceIf', () => {
-      const clone = Px.replaceIf(true);
+      const clone = PxFactory.replaceIf(true);
       expect(clone.sequencesDescription.length).to.equal(1);
       expect(clone.sequencesDescription[0]).to.have.property('type', 'replaceIf');
     });
@@ -84,13 +76,13 @@ describe('Px', () => {
 
   describe('catch Errors', () => {
     it('catch function', () => {
-      const clone = Px.create().catch(() => { });
+      const clone = PxFactory.create().catch(() => { });
       expect(clone.catchPipe).to.be.an.instanceof(Px);
     });
 
     it('catch pipe', () => {
-      const px = Px.create();
-      const clone = Px.create().catch(px);
+      const px = PxFactory.create();
+      const clone = PxFactory.create().catch(px);
       expect(clone.catchPipe).to.be.an.instanceof(Px);
     });
   });
@@ -118,15 +110,15 @@ describe('Px', () => {
       failSinon.restore();
     });
     it('of', () => {
-      const px = Px.create().of('test');
+      const px = PxFactory.create().of('test');
       expect(px.input).to.equal('test');
     });
     it('iter Array', () => {
-      Px.create().iter([1, 2, 3, 4]);
+      PxFactory.create().iter([1, 2, 3, 4]);
       expect(requests).to.eq(4);
     });
     it('iter Object', () => {
-      Px.create().iter({ aa: 1, bb: 2 });
+      PxFactory.create().iter({ aa: 1, bb: 2 });
       expect(requests).to.eq(2);
     });
 
@@ -136,18 +128,18 @@ describe('Px', () => {
         yield 2;
         yield 3;
       }
-      Px.create().iter(test);
+      PxFactory.create().iter(test);
       expect(requests).to.eq(3);
     });
     it('From promise', async () => {
       const pro = Promise.resolve('test');
-      Px.create().fromPromise(pro);
+      PxFactory.create().fromPromise(pro);
       await (pro);
       expect(requests).to.eq(1);
     });
     it('From promise fail', async () => {
       const pro = Promise.reject(new Error('test'));
-      Px.create().fromPromise(pro);
+      PxFactory.create().fromPromise(pro);
       try {
         await (pro);
       } catch (err) {
@@ -158,7 +150,7 @@ describe('Px', () => {
       const observer = {
         subscribe: func => func(),
       };
-      Px.create().fromObserver(observer);
+      PxFactory.create().fromObserver(observer);
       expect(requests).to.eq(1);
     });
     it('From Dom event', () => {
@@ -169,7 +161,7 @@ describe('Px', () => {
       };
       global.document.getElementById = () => event;
 
-      Px.create().fromDomEvent('#test', 'click');
+      PxFactory.create().fromDomEvent('#test', 'click');
       expect(requests).to.eq(1);
     });
   });

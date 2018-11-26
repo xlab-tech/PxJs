@@ -27,6 +27,7 @@ const exec = (evt, ctx, call) => {
 
   const pipe = Px
     .chain(functions.func1)
+    .do(console.log)
     .chain(functions.func1, functions.func2)
     .chain(functions.func3)
     //.chain(JSON.parse)

@@ -43,10 +43,6 @@ const exec = (evt, ctx, call) => {
     .chain(input => `${input} branch1`)
     .chain(input => `${input} branch1`)
     .chain(input => `${input} branch1`)
-    .chain((input, next) => {
-      // throw ('mierda ');
-      next('pp');
-    })
     .branch(pipe)
     .chain(input => `${input} branch1`)
     .chain(input => `${input} branch1`);
@@ -143,7 +139,7 @@ const c = Px.chain(console.log)
   .catch(err => console.log('error', err))
   .bindNodeCallback();
 
-Px.setDebug(false);
+Px.setDebug(true);
 
 exec(event, context, c);
 

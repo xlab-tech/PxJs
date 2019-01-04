@@ -3,12 +3,15 @@ const Px = require('./../lib/Px');
 Px.setDebug(true);
 
 const pipe = Px
-  .chain(input => `${input} Branch`)
-  .chain(input => `${input} Branch`);
+  .chain(input => 'Branch 1');
+
+const pipe2 = Px
+  .chain(input => 'Branch 2');
 
 Px.chain(input => `${input} Chain`)
-  .branch(pipe)
+   .branch('t', pipe, 't2', pipe2)
+  //.branch(pipe, pipe2)
   // .branchIf(() => false, pipe)
-  .chain(input => `${input} TWO`)
+  // .chain(input => `${input} TWO`)
   .subscribe(res => console.log(res), err => console.log(err))
   .of('pepe ');
